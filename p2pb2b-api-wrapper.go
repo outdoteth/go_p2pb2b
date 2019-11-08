@@ -1,9 +1,29 @@
 package go_p2pb2b
 
-//This needs some info and is the initialiser object- Perhaps API keys etc.
-type P2PB2B struct {}
+import (
+	"context"
+)
 
-//This needs to return a json object
-func (e *P2PB2B) get_price() float64 {
+//Client object for initial parameters
+type Client struct {
+	URL string
+	API_Key string
+	Ctx context.Context
+}
+
+//Initialiser function
+func NewClient(url, api_key string, ctx context.Context) *Client {
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
+	return &Client {
+		URL: url,
+		API_Key: api_key,
+		Ctx: ctx,
+	}
+}
+
+func (clt *Client) get_price() float64 {
 	return 5.0
 }
