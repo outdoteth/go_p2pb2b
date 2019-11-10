@@ -88,7 +88,41 @@ func (clt *Client) get_markets() (*get_markets_json, error) {
 	return &json_res, nil
 }
 
+type get_tickers_result struct {
+	At int `json: "at"`
+	Ticker struct {
+		Bid string `json: "bid"`
+		Ask string `json: "ask"`
+		Low  string `json: "low"`
+		High string `json: "high"`
+		Last string `json: "last"`
+		Vol string `json: "vol"`
+		Change string `json: "change"`
+	} `json: "ticker"`
+}
 
+type get_tickers_json struct {
+	Success bool `json: "success"`
+	Message string `json: "message"`
+	Result map[string]get_tickers_result `json: "result"`
+	Cache_time float64 `json: "cache_time"`
+	Current_time float64 `json: "current_time"`
+}
+
+func (clt *Client) get_tickers() (*get_tickers_json, error) {
+	endpoint := "/public/tickers"
+	res, err := clt.API_request(http.MethodGet, endpoint)
+	if err != nil {
+		return nil, err
+	}
+	fmt.Println(string(res))
+	var json_res get_tickers_json
+	if err := json.Unmarshal(res, &json_res); err != nil {
+		return nil, err
+	}
+
+	return &json_res, nil
+}
 
 
 
