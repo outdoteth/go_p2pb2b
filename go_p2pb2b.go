@@ -4,6 +4,8 @@ import (
 	"context"
 	"net/http"
 	"io/ioutil"
+	"encoding/json"
+	"fmt"
 )
 
 //Client object for initial parameters
@@ -27,7 +29,7 @@ func New_Client(url, api_key string, ctx context.Context) *Client {
 	}
 }
 
-func (clt *Client) API_request(method, endpoint string) (*http.Response, error) {
+func (clt *Client) API_request(method, endpoint string) ([]byte, error) {
 	ctx := clt.Ctx
 	var req *http.Request
 	var err error
@@ -43,30 +45,47 @@ func (clt *Client) API_request(method, endpoint string) (*http.Response, error) 
 	res, err := http.DefaultClient.Do(req)
 
 	if err != nil {
-		return res, err
-	}
-
-	return res, nil
-}
-
-
-
-//this is where we need a custom response type so its easy for the end user
-func (clt *Client) get_markets() (string, error) {
-	endpoint := "/public/markets"
-	res, err := clt.API_request(http.MethodGet, endpoint)
-
-	if err != nil {
-		return "", err
+		return nil, err
 	}
 
 	defer res.Body.Close()
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		return "", err
+		return nil, err
+	}
+	fmt.Print(string(body))
+	return body, nil
+}
+
+type get_markets_result struct {
+	Name string `json: "name"`
+	Stock string `json: "stock"`
+	Money string `json: "money"`
+	MoneyPrec string `json: moneyPrec`
+	StockPrec string `json: "stockPrec"`
+	FeePrec string `json: "feePrec"`
+	MinAmount string `json: "minAmount"`
+}
+
+type get_markets_json struct {
+	Success bool `json: "success"`
+	Message string `json: "message"`
+	Result []get_markets_result `json: "result"`
+}
+
+func (clt *Client) get_markets() (*get_markets_json, error) {
+	endpoint := "/public/markets"
+	res, err := clt.API_request(http.MethodGet, endpoint)
+
+	if err != nil {
+		return nil, err
 	}
 
-	return string(body), nil
+	var json_res get_markets_json
+	if err := json.Unmarshal(res, &json_res); err != nil {
+		return nil, err
+	}
+	return &json_res, nil
 }
 
 
