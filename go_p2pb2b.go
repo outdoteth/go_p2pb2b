@@ -67,13 +67,13 @@ type get_markets_result struct {
 	MinAmount string `json: "minAmount"`
 }
 
-type get_markets_json struct {
+type Get_markets_json struct {
 	Success bool `json: "success"`
 	Message string `json: "message"`
 	Result []get_markets_result `json: "result"`
 }
 
-func (clt *Client) get_markets() (*get_markets_json, error) {
+func (clt *Client) Get_markets() (*Get_markets_json, error) {
 	endpoint := "/public/markets"
 	res, err := clt.API_request(http.MethodGet, endpoint)
 
@@ -81,7 +81,7 @@ func (clt *Client) get_markets() (*get_markets_json, error) {
 		return nil, err
 	}
 
-	var json_res get_markets_json
+	var json_res Get_markets_json
 	if err := json.Unmarshal(res, &json_res); err != nil {
 		return nil, err
 	}
@@ -101,7 +101,7 @@ type get_tickers_result struct {
 	} `json: "ticker"`
 }
 
-type get_tickers_json struct {
+type Get_tickers_json struct {
 	Success bool `json: "success"`
 	Message string `json: "message"`
 	Result map[string]get_tickers_result `json: "result"`
@@ -109,14 +109,14 @@ type get_tickers_json struct {
 	Current_time float64 `json: "current_time"`
 }
 
-func (clt *Client) get_tickers() (*get_tickers_json, error) {
+func (clt *Client) Get_tickers() (*Get_tickers_json, error) {
 	endpoint := "/public/tickers"
 	res, err := clt.API_request(http.MethodGet, endpoint)
 	if err != nil {
 		return nil, err
 	}
 	fmt.Println(string(res))
-	var json_res get_tickers_json
+	var json_res Get_tickers_json
 	if err := json.Unmarshal(res, &json_res); err != nil {
 		return nil, err
 	}
@@ -124,5 +124,40 @@ func (clt *Client) get_tickers() (*get_tickers_json, error) {
 	return &json_res, nil
 }
 
+type get_ticker_result struct {
+	Bid string `json: "bid"`
+	Ask string `json: "ask"`
+	Open string `json: "open"`
+	High string `json: "high"`
+	Low  string `json: "low"`
+	Last string `json: "last"`
+	Volume string `json: "volume"`
+	Deal string `json: "deal"`
+	Change string `json: "change"`
+}
 
+type Get_ticker_json struct {
+	Success bool `json: "success"`
+	Message string `json: "message"`
+	Result get_ticker_result `json: "result"`
+	Cache_time float64 `json: "cache_time"`
+	Current_time float64 `json: "current_time"`
+}
+type Get_ticker_params struct {
+	Symbol string
+}
 
+func (clt *Client) Get_ticker(opts Get_ticker_params) (*Get_ticker_json, error) {
+	endpoint := "/public/ticker?market=" + opts.Symbol
+	res, err := clt.API_request(http.MethodGet, endpoint)
+	if err != nil {
+		return nil, err
+	}
+	fmt.Println("\n" + string(res))
+	var json_res Get_ticker_json
+	if err := json.Unmarshal(res, &json_res); err != nil {
+		return nil, err
+	}
+
+	return &json_res, nil
+}

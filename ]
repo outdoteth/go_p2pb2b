@@ -33,7 +33,7 @@ func Test_get_tickers_get_request(t *testing.T) {
 func Test_get_ticker_get_request(t *testing.T) {
 	ctx := context.Background()
 	client := New_Client("https://api.p2pb2b.io/api/v1", "", ctx)
-	res, err := client.Get_ticker(Get_ticker_params{Symbol: "ETH_BTC"})
+	res, err := client.get_tickers()
 	if err != nil {
 		t.Errorf("get_ticker get request failed, expected %v, got %v", nil, err)
 		return
