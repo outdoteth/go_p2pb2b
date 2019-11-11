@@ -165,11 +165,11 @@ func (clt *Client) Ticker(opts Ticker_params) (*Ticker_json, error) {
 
 
 type order_book_result struct {
-	Offset int64 `json: "offset"`
-	Limit int64 `json: "limit"`
-	Total int64 `json: "total"`
+	Offset uint64 `json: "offset"`
+	Limit uint64 `json: "limit"`
+	Total uint64 `json: "total"`
 	Orders []struct {
-		Id int64 `json: "id"`
+		Id uint64 `json: "id"`
 		Left string `json: "left"`
 		Market string `json: "market"`
 		Amount string `json: "amount"`
@@ -217,7 +217,7 @@ func (clt *Client) Order_book(opts Order_book_params) (*Order_book_json, error) 
 }
 
 type history_result struct {
-	Id int64 `json: "id"`
+	Id uint64 `json: "id"`
 	Type string `json: "type"`
 	Time float64 `json: "time"`
 	Amount string `json: "amount"`

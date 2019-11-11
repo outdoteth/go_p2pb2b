@@ -43,7 +43,7 @@ func Test_get_tickers_get_request(t *testing.T) {
 
 }*/
 
-func Test_order_book_get_request(t *testing.T) {
+/*func Test_order_book_get_request(t *testing.T) {
 	ctx := context.Background()
 	client := New_Client("https://api.p2pb2b.io/api/v1", "", ctx)
 	res, err := client.Order_book(Order_book_params{Market: "ETH_BTC", Side: "buy", Offset: "0", Limit: "100"})
@@ -52,7 +52,7 @@ func Test_order_book_get_request(t *testing.T) {
 	}
 
 	t.Logf("Order_book get request success, expected %+v\n, got %v+\n", res, res)
-}
+}*/
 
 func Test_history_get_request(t *testing.T) {
 	ctx := context.Background()
@@ -62,8 +62,21 @@ func Test_history_get_request(t *testing.T) {
 		t.Errorf("History get request failed, expected %v, got %v\n", nil, err)
 	}
 
-	t.Logf("History get request success, expected %+v\n, got %v+\n", res, res)
+	if !res.Success {
+		t.Errorf("History get request failed, expected res.Success to be true,instead got %+v\n", res)
+	}
 
+	if len(res.Result) == 0 {
+		t.Errorf("History get request failed, expected res.Result length to be greater than 1, instead got %+v\n", res)
+		return
+	}
+
+	if i := res.Result[0]; i.Id == 0 || i.Type == "" || i.Time == 0.0 || i.Amount == "" || i.Price == "" {
+		t.Errorf("History get request failed, expected res.Result[0] to have values in all fields, instead got %+v\n", res)
+		return
+	}
+
+	t.Logf("History get request success")
 }
 
 
