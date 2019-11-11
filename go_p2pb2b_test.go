@@ -30,7 +30,7 @@ func Test_get_tickers_get_request(t *testing.T) {
 	t.Logf("market get request success, expected %+v\n, got %+v\n", res, res)
 }*/
 
-func Test_get_ticker_get_request(t *testing.T) {
+/*func Test_get_ticker_get_request(t *testing.T) {
 	ctx := context.Background()
 	client := New_Client("https://api.p2pb2b.io/api/v1", "", ctx)
 	res, err := client.Get_ticker(Get_ticker_params{Symbol: "ETH_BTC"})
@@ -41,4 +41,18 @@ func Test_get_ticker_get_request(t *testing.T) {
 
 	t.Logf("get_ticker get request success, expected %+v\n, got %+v\n", res, res)
 
+}*/
+
+func Test_order_book_get_request(t *testing.T) {
+	ctx := context.Background()
+	client := New_Client("https://api.p2pb2b.io/api/v1", "", ctx)
+	res, err := client.Order_book(Order_book_params{Market: "ETH_BTC", Side: "buy", Offset: "0", Limit: "100"})
+	if err != nil {
+		t.Errorf("Order_book get request failed, expected %v, got %v\n", nil, err)
+	}
+
+	t.Logf("Order_book get request success, expected %+v\n, got %v+\n", res, res)
 }
+
+
+

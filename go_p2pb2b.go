@@ -57,7 +57,7 @@ func (clt *Client) API_request(method, endpoint string) ([]byte, error) {
 	return body, nil
 }
 
-type get_markets_result struct {
+type markets_result struct {
 	Name string `json: "name"`
 	Stock string `json: "stock"`
 	Money string `json: "money"`
@@ -67,13 +67,13 @@ type get_markets_result struct {
 	MinAmount string `json: "minAmount"`
 }
 
-type Get_markets_json struct {
+type Markets_json struct {
 	Success bool `json: "success"`
 	Message string `json: "message"`
-	Result []get_markets_result `json: "result"`
+	Result []markets_result `json: "result"`
 }
 
-func (clt *Client) Get_markets() (*Get_markets_json, error) {
+func (clt *Client) Markets() (*Markets_json, error) {
 	endpoint := "/public/markets"
 	res, err := clt.API_request(http.MethodGet, endpoint)
 
@@ -81,14 +81,14 @@ func (clt *Client) Get_markets() (*Get_markets_json, error) {
 		return nil, err
 	}
 
-	var json_res Get_markets_json
+	var json_res Markets_json
 	if err := json.Unmarshal(res, &json_res); err != nil {
 		return nil, err
 	}
 	return &json_res, nil
 }
 
-type get_tickers_result struct {
+type tickers_result struct {
 	At int `json: "at"`
 	Ticker struct {
 		Bid string `json: "bid"`
@@ -101,22 +101,22 @@ type get_tickers_result struct {
 	} `json: "ticker"`
 }
 
-type Get_tickers_json struct {
+type Tickers_json struct {
 	Success bool `json: "success"`
 	Message string `json: "message"`
-	Result map[string]get_tickers_result `json: "result"`
+	Result map[string]tickers_result `json: "result"`
 	Cache_time float64 `json: "cache_time"`
 	Current_time float64 `json: "current_time"`
 }
 
-func (clt *Client) Get_tickers() (*Get_tickers_json, error) {
+func (clt *Client) Tickers() (*Tickers_json, error) {
 	endpoint := "/public/tickers"
 	res, err := clt.API_request(http.MethodGet, endpoint)
 	if err != nil {
 		return nil, err
 	}
 	fmt.Println(string(res))
-	var json_res Get_tickers_json
+	var json_res Tickers_json
 	if err := json.Unmarshal(res, &json_res); err != nil {
 		return nil, err
 	}
@@ -124,7 +124,7 @@ func (clt *Client) Get_tickers() (*Get_tickers_json, error) {
 	return &json_res, nil
 }
 
-type get_ticker_result struct {
+type ticker_result struct {
 	Bid string `json: "bid"`
 	Ask string `json: "ask"`
 	Open string `json: "open"`
@@ -136,28 +136,87 @@ type get_ticker_result struct {
 	Change string `json: "change"`
 }
 
-type Get_ticker_json struct {
+type Ticker_json struct {
 	Success bool `json: "success"`
 	Message string `json: "message"`
-	Result get_ticker_result `json: "result"`
+	Result ticker_result `json: "result"`
 	Cache_time float64 `json: "cache_time"`
 	Current_time float64 `json: "current_time"`
 }
-type Get_ticker_params struct {
+
+type Ticker_params struct {
 	Symbol string
 }
 
-func (clt *Client) Get_ticker(opts Get_ticker_params) (*Get_ticker_json, error) {
+func (clt *Client) Ticker(opts Ticker_params) (*Ticker_json, error) {
 	endpoint := "/public/ticker?market=" + opts.Symbol
 	res, err := clt.API_request(http.MethodGet, endpoint)
 	if err != nil {
 		return nil, err
 	}
 	fmt.Println("\n" + string(res))
-	var json_res Get_ticker_json
+	var json_res Ticker_json
 	if err := json.Unmarshal(res, &json_res); err != nil {
 		return nil, err
 	}
 
 	return &json_res, nil
 }
+
+
+type order_book_result struct {
+	Offset int64 `json: "offset"`
+	Limit int64 `json: "limit"`
+	Total int64 `json: "total"`
+	Orders []struct {
+		Id int64 `json: "id"`
+		Left string `json: "left"`
+		Market string `json: "market"`
+		Amount string `json: "amount"`
+		Type string `json: "type"`
+		Price string `json: "price"`
+		Timestamp float64 `json: "timestamp"`
+		Side string `json: "side"`
+		DealFee string `json: "dealFee"`
+		TakerFee string `json: "takerFee"`
+		MakerFee string `json: "makerFee"`
+		DealStock string `json: "dealStock"`
+		DealMoney string `json: "dealMoney"`
+	} `json: "orders"`
+}
+
+type Order_book_json struct {
+	Success bool `json: "success"`
+	Message string `json: "message"`
+	Result order_book_result `json: "result"`
+	Cache_time float64 `json: "cache_time"`
+	Current_time float64 `json: "current_time"`
+}
+
+type Order_book_params struct {
+	Market string
+	Side string
+	Offset string
+	Limit string
+}
+
+func (clt *Client) Order_book(opts Order_book_params) (*Order_book_json, error) {
+	endpoint := "/public/book?market=" + opts.Market + "&side=" + opts.Side + "&offset=" + opts.Offset + "&limit=" + opts.Limit
+	res, err := clt.API_request(http.MethodGet, endpoint)
+	if err != nil {
+		return nil, err
+	}
+
+	fmt.Println("\n" + string(res))
+	var json_res Order_book_json
+	if err := json.Unmarshal(res, &json_res); err != nil {
+		return nil, err
+	}
+
+	return &json_res, nil
+}
+
+
+
+
+
