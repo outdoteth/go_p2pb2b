@@ -216,7 +216,42 @@ func (clt *Client) Order_book(opts Order_book_params) (*Order_book_json, error) 
 	return &json_res, nil
 }
 
+type history_result struct {
+	Id int64 `json: "id"`
+	Type string `json: "type"`
+	Time float64 `json: "time"`
+	Amount string `json: "amount"`
+	Price string `json: "price"`
+}
 
+type History_json struct {
+	Success bool `json: "success"`
+	Message string `json: "message"`
+	Result []history_result `json: "result"`
+	Cache_time float64 `json: "cache_time"`
+	Current_time float64 `json: "current_time"`
+}
 
+type History_params struct {
+	Market string
+	Last_id string
+	Limit string
+}
+
+func (clt *Client) History(opts History_params) (*History_json, error) {
+	endpoint := "/public/history?market=" + opts.Market + "&lastId=" + opts.Last_id + "&limit=" + opts.Limit
+	res, err := clt.API_request(http.MethodGet, endpoint)
+	if err != nil {
+		return nil, err
+	}
+
+	fmt.Println("\n" + string(res))
+	var json_res History_json
+	if err := json.Unmarshal(res, &json_res); err != nil {
+		return nil, err
+	}
+
+	return &json_res, nil
+}
 
 

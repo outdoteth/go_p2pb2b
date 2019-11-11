@@ -54,5 +54,16 @@ func Test_order_book_get_request(t *testing.T) {
 	t.Logf("Order_book get request success, expected %+v\n, got %v+\n", res, res)
 }
 
+func Test_history_get_request(t *testing.T) {
+	ctx := context.Background()
+	client := New_Client("https://api.p2pb2b.io/api/v1", "", ctx)
+	res, err := client.History(History_params{Market: "ETH_BTC", Last_id: "1",  Limit: "100"})
+	if err != nil {
+		t.Errorf("History get request failed, expected %v, got %v\n", nil, err)
+	}
+
+	t.Logf("History get request success, expected %+v\n, got %v+\n", res, res)
+
+}
 
 
