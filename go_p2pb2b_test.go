@@ -1,8 +1,8 @@
 package go_p2pb2b
 
-import(
-	"testing"
+import (
 	"context"
+	"testing"
 )
 
 /*
@@ -54,7 +54,7 @@ func Test_get_tickers_get_request(t *testing.T) {
 	t.Logf("Order_book get request success, expected %+v\n, got %v+\n", res, res)
 }*/
 
-func Test_history_get_request(t *testing.T) {
+/*func Test_history_get_request(t *testing.T) {
 	ctx := context.Background()
 	client := New_Client("https://api.p2pb2b.io/api/v1", "", ctx)
 	res, err := client.History(History_params{Market: "ETH_BTC", Last_id: "1",  Limit: "100"})
@@ -77,6 +77,28 @@ func Test_history_get_request(t *testing.T) {
 	}
 
 	t.Logf("History get request success")
+}*/
+
+func TestDepth(t *testing.T) {
+	ctx := context.Background()
+	client := New_Client("https://api.p2pb2b.io/api/v1", "", ctx)
+	res, err := client.Depth(Depth_params{Market: "ETH_BTC", Limit: "100"})
+	if err != nil {
+		t.Errorf("Order_book get request failed, expected %v, got %v\n", nil, err)
+	}
+
+	if !res.Success {
+		t.Errorf("Depth() get request failed, expected res.Success to be true,instead got %+v\n", res)
+		return
+	}
+
+	if len(res.Result.Asks) < 1 || len(res.Result.Bids) < 1 {
+		t.Errorf("Depth() get request failed, expected to get some Asks or Bids, instead got %+v\n", res)
+		return
+	}
+
+	if len(res.Result.Asks[0]) != 2 || len(res.Result.Bids[0]) != 2 {
+		t.Errorf("Depth() get request failed. res.Result.Bids or res.Result.Asks has malformed data, expected [][2]string, instead got %v+\n", res)
+	}
+	t.Logf("Order_book get request success, expected %+v\n, got %v+\n", res, res)
 }
-
-
