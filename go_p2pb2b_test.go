@@ -103,7 +103,7 @@ func Test_get_tickers_get_request(t *testing.T) {
 	t.Logf("Order_book get request success, expected %+v\n, got %v+\n", res, res)
 }*/
 
-func TestProducts(t *testing.T) {
+/*func TestProducts(t *testing.T) {
 	ctx := context.Background()
 	client := New_Client("https://api.p2pb2b.io/api/v1", "", ctx)
 	res, err := client.Products()
@@ -123,4 +123,26 @@ func TestProducts(t *testing.T) {
 	}
 
 	t.Logf("Products() get request success, expected %+v\n, got %v+\n", res, res)
+}*/
+
+func TestSymbols(t *testing.T) {
+	ctx := context.Background()
+	client := New_Client("https://api.p2pb2b.io/api/v1", "", ctx)
+	res, err := client.Symbols()
+	if err != nil {
+		t.Errorf("Symbols() get request failed, expected Error=%v, instead got Error=%v\n", nil, err)
+		return
+	}
+
+	if !res.Success {
+		t.Errorf("Symbols() get request failed, expected res.Success to be true, instead got %+v\n", res)
+		return
+	}
+
+	if len(res.Result) < 1 {
+		t.Errorf("Symbols() get request failed, expected res.Result length to have data, instead got %+v\n", res)
+		return
+	}
+
+	t.Logf("Symbol() get request success, expected %+v\n, got %v+\n", res, res)
 }

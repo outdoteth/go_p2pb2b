@@ -316,3 +316,27 @@ func (clt *Client) Products() (*Products_json, error) {
 	return &json_res, nil
 
 }
+
+type Symbols_json struct {
+	Success      bool     `json:"success"`
+	Message      string   `json:"message"`
+	Result       []string `json:"result"`
+	Cache_time   float64  `json:"cache___time"`
+	Current_time float64  `json:"current___time"`
+}
+
+func (clt *Client) Symbols() (*Symbols_json, error) {
+	endpoint := "/public/symbols"
+	res, err := clt.API_request(http.MethodGet, endpoint)
+	if err != nil {
+		return nil, err
+	}
+
+	fmt.Println("\n" + string(res))
+	var json_res Symbols_json
+	if err := json.Unmarshal(res, &json_res); err != nil {
+		return nil, err
+	}
+
+	return &json_res, nil
+}
