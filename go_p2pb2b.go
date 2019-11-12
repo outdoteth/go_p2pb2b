@@ -285,3 +285,34 @@ func (clt *Client) Depth(opts Depth_params) (*Depth_json, error) {
 
 	return &json_res, nil
 }
+
+type products_result struct {
+	Id          string `json:"id"`
+	From_symbol string `json:"from___symbol"`
+	To_symbol   string `json:"to___symbol"`
+}
+
+type Products_json struct {
+	Success      bool              `json:"success"`
+	Message      string            `json:"message"`
+	Result       []products_result `json:"result"`
+	Cache_time   float64           `json:"cache_time"`
+	Current_time float64           `json:"current_time"`
+}
+
+func (clt *Client) Products() (*Products_json, error) {
+	endpoint := "/public/products"
+	res, err := clt.API_request(http.MethodGet, endpoint)
+	if err != nil {
+		return nil, err
+	}
+
+	fmt.Println("\n" + string(res))
+	var json_res Products_json
+	if err := json.Unmarshal(res, &json_res); err != nil {
+		return nil, err
+	}
+
+	return &json_res, nil
+
+}

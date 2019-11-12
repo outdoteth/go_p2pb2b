@@ -79,7 +79,7 @@ func Test_get_tickers_get_request(t *testing.T) {
 	t.Logf("History get request success")
 }*/
 
-func TestDepth(t *testing.T) {
+/*func TestDepth(t *testing.T) {
 	ctx := context.Background()
 	client := New_Client("https://api.p2pb2b.io/api/v1", "", ctx)
 	res, err := client.Depth(Depth_params{Market: "ETH_BTC", Limit: "100"})
@@ -101,4 +101,26 @@ func TestDepth(t *testing.T) {
 		t.Errorf("Depth() get request failed. res.Result.Bids or res.Result.Asks has malformed data, expected [][2]string, instead got %v+\n", res)
 	}
 	t.Logf("Order_book get request success, expected %+v\n, got %v+\n", res, res)
+}*/
+
+func TestProducts(t *testing.T) {
+	ctx := context.Background()
+	client := New_Client("https://api.p2pb2b.io/api/v1", "", ctx)
+	res, err := client.Products()
+	if err != nil {
+		t.Errorf("Products() get request failed, expected Error=%v, instead got Error=%v\n", nil, err)
+		return
+	}
+
+	if !res.Success {
+		t.Errorf("Products() get request failed, expected res.Success to be true, instead got %+v\n", res)
+		return
+	}
+
+	if len(res.Result) < 1 {
+		t.Errorf("Products() get request failed, expected res.Result length to have data, instead got %+v\n", res)
+		return
+	}
+
+	t.Logf("Products() get request success, expected %+v\n, got %v+\n", res, res)
 }
