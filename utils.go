@@ -59,6 +59,9 @@ func (clt *Client) AuthAPIRequest(postDataBuffer interface{}, method, endpoint s
 	h := hmac.New(sha512.New, []byte(clt.APIKey))
 	h.Write([]byte(data))
 	signature := hex.EncodeToString(h.Sum(nil))
+
+	///TODO: contstruct the actual request to send off
+
 	//run through all of the signing procedures
 	/*
 			body { request: <url><string>
