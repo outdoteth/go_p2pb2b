@@ -1,6 +1,7 @@
 package p2pb2b
 
 import (
+	"bytes"
 	"crypto/hmac"
 	"crypto/sha512"
 	"encoding/base64"
@@ -60,34 +61,11 @@ func (clt *Client) AuthAPIRequest(postDataBuffer interface{}, method, endpoint s
 	h.Write([]byte(data))
 	signature := hex.EncodeToString(h.Sum(nil))
 
-	///TODO: contstruct the actual request to send off
-
-	//run through all of the signing procedures
-	/*
-			body { request: <url><string>
-				nonce: Date.now()
-				...other_data
-			}
-
-		1. get the postData (should already be formatted to a string/buffer) then make it into a body
-
-		signature = toString(body)
-			.toBuffer()
-			.toBase64()
-			.Sha512HMACSign()
-			.toHex()
-
-		request {
-			url: completeURL,
-			  headers: {
-			    'Content-Type': 'application/json',
-			    'X-TXC-APIKEY': apiKey,
-			    'X-TXC-PAYLOAD': toString(body).Buffer.toBase64(),
-			    'X-TXC-SIGNATURE': signature
-			  },
-			  body: toString(body),
-		}
-	*/
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(byteJson))
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("X-TXC-APIKEY", clt.APIKey)
+	req.Header.Set("X-TXC-PAYLOAD", payload)
+	req.Header.Set("X-TXC-SIGNATURE", signature)
 
 	req.WithContext(ctx)
 	res, err := http.DefaultClient.Do(req)
