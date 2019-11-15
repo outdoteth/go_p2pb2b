@@ -56,18 +56,17 @@ func (clt *Client) AuthAPIRequest(postBody interface{}, method, endpoint string)
 
 	signer := hmac.New(sha512.New, []byte(APISecret))
 	signer.Write([]byte(payload))
-	hex_sig := hex.EncodeToString(signer.Sum(nil))
+	hexSig := hex.EncodeToString(signer.Sum(nil))
 
-	url := "https://p2pb2b.io/api/v1/account/balances"
-	req, _ := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(byteJson))
+	url := clt.URL + endpoint
+	req, _ := http.NewRequest(method, url, bytes.NewBuffer(byteJson))
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("X-TXC-APIKEY", APIKey)
 	req.Header.Set("X-TXC-PAYLOAD", payload)
-	req.Header.Set("X-TXC-SIGNATURE", hex_sig)
+	req.Header.Set("X-TXC-SIGNATURE", hexSig)
 
 	req.WithContext(ctx)
 	res, err := http.DefaultClient.Do(req)
-
 	if err != nil {
 		return nil, err
 	}

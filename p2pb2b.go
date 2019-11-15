@@ -6,13 +6,14 @@ import (
 
 //Client object for initial parameters
 type Client struct {
-	URL    string
-	APIKey string
-	Ctx    context.Context
+	URL       string
+	APIKey    string
+	APISecret string
+	Ctx       context.Context
 }
 
 //Initialiser function
-func NewClient(url, apiKey string, ctx context.Context) *Client {
+func NewClient(url, apiKey, apiSecret string, ctx context.Context) *Client {
 	if ctx == nil {
 		ctx = context.Background()
 	}
