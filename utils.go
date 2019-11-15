@@ -43,29 +43,27 @@ func (clt *Client) APIRequest(method, endpoint string) ([]byte, error) {
 
 /// A general utility for making authenticated API requests
 /// Using HMACSha512 signing
-func (clt *Client) AuthAPIRequest(postDataBuffer interface{}, method, endpoint string) ([]byte, error) {
+func (clt *Client) AuthAPIRequest(postBody interface{}, method, endpoint string) ([]byte, error) {
 	ctx := clt.Ctx
 	var req *http.Request
 	var err error
 
-	// Gets the json body ready for signing
-	byteJson, err := json.Marshal(postBody)
-	if err != nil {
-		return nil, err
-	}
+	APIKey := clt.APIKey
+	APISecret := clt.APISecret
+
+	byteJson, _ := json.Marshal(postBody)
 	payload := base64.StdEncoding.EncodeToString(byteJson)
 
-	/// Signs a sha512 hash of the json base64 string and
-	/// returns a hex string of the signature
-	h := hmac.New(sha512.New, []byte(clt.APIKey))
-	h.Write([]byte(data))
-	signature := hex.EncodeToString(h.Sum(nil))
+	signer := hmac.New(sha512.New, []byte(APISecret))
+	signer.Write([]byte(payload))
+	hex_sig := hex.EncodeToString(signer.Sum(nil))
 
-	req, err := http.NewRequest("POST", url, bytes.NewBuffer(byteJson))
+	url := "https://p2pb2b.io/api/v1/account/balances"
+	req, _ := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(byteJson))
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("X-TXC-APIKEY", clt.APIKey)
+	req.Header.Set("X-TXC-APIKEY", APIKey)
 	req.Header.Set("X-TXC-PAYLOAD", payload)
-	req.Header.Set("X-TXC-SIGNATURE", signature)
+	req.Header.Set("X-TXC-SIGNATURE", hex_sig)
 
 	req.WithContext(ctx)
 	res, err := http.DefaultClient.Do(req)
