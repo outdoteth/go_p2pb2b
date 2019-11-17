@@ -6,8 +6,15 @@ import (
 	"time"
 )
 
-/// TODO: Get the response type and check that this request works
+type currencyResult struct {
+	Available string `json:"available"`
+	Freeze    string `json:"freeze"`
+}
+
 type CurrencyJsonRes struct {
+	Success bool           `json:"success"`
+	Message string         `json:"message"`
+	Result  currencyResult `json:"result"`
 }
 
 type CurrencyJsonBody struct {

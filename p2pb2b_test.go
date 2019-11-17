@@ -174,5 +174,4 @@ func TestCurrencyBalance(t *testing.T) {
 		}
 	*/
 	t.Logf("CurrencyBalance() get request success, expected %+v\n, got %v+\n", res, res)
-
 }
