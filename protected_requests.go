@@ -21,7 +21,7 @@ type CurrencyBalanceParams struct {
 }
 
 func (clt *Client) CurrencyBalance(opts CurrencyBalanceParams) (*CurrencyJsonRes, error) {
-	endpoint := "api/v1/protected/account/balance"
+	endpoint := "/api/v1/account/balance"
 	postBody := CurrencyJsonBody{
 		RequestUrl: endpoint,
 		Nonce:      time.Now().Unix(),

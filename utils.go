@@ -59,7 +59,7 @@ func (clt *Client) AuthAPIRequest(postBody interface{}, method, endpoint string)
 	hexSig := hex.EncodeToString(signer.Sum(nil))
 
 	url := clt.URL + endpoint
-	req, _ := http.NewRequest(method, url, bytes.NewBuffer(byteJson))
+	req, _ = http.NewRequest(method, url, bytes.NewBuffer(byteJson))
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("X-TXC-APIKEY", APIKey)
 	req.Header.Set("X-TXC-PAYLOAD", payload)

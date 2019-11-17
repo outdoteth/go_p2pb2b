@@ -19,8 +19,9 @@ func NewClient(url, apiKey, apiSecret string, ctx context.Context) *Client {
 	}
 
 	return &Client{
-		URL:    url,
-		APIKey: apiKey,
-		Ctx:    ctx,
+		URL:       url,
+		APIKey:    apiKey,
+		APISecret: apiSecret,
+		Ctx:       ctx,
 	}
 }

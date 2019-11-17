@@ -2,6 +2,8 @@ package p2pb2b
 
 import (
 	"context"
+	"flag"
+	"fmt"
 	"testing"
 )
 
@@ -125,6 +127,7 @@ func Test_get_tickers_get_request(t *testing.T) {
 	t.Logf("Products() get request success, expected %+v\n, got %v+\n", res, res)
 }*/
 
+/*
 func TestSymbols(t *testing.T) {
 	ctx := context.Background()
 	client := NewClient("https://api.p2pb2b.io/api/v1", "", ctx)
@@ -145,4 +148,31 @@ func TestSymbols(t *testing.T) {
 	}
 
 	t.Logf("Symbol() get request success, expected %+v\n, got %v+\n", res, res)
+}*/
+
+var APISecret *string = flag.String("secret", "", "Pass in api secret to test protected requests")
+var APIKey *string = flag.String("key", "", "Pass in api key to test protected requests")
+
+func TestCurrencyBalance(t *testing.T) {
+	fmt.Printf("key: %+v\n secret: %+v", *APIKey, *APISecret)
+	ctx := context.Background()
+	client := NewClient("https://api.p2pb2b.io", *APIKey, *APISecret, ctx)
+	res, err := client.CurrencyBalance(CurrencyBalanceParams{Currency: "ETH"})
+	if err != nil {
+		t.Errorf("CurrencyBalance() get request failed, expected Error=%v, instead got Error=%v\n", nil, err)
+		return
+	}
+	/*
+		if !res.Success {
+			t.Errorf("CurrencyBalance() get request failed, expected res.Success to be true, instead got %+v\n", res)
+			return
+		}
+
+		if len(res.Result) < 1 {
+			t.Errorf("CurrencyBalance() get request failed, expected res.Result length to have data, instead got %+v\n", res)
+			return
+		}
+	*/
+	t.Logf("CurrencyBalance() get request success, expected %+v\n, got %v+\n", res, res)
+
 }
