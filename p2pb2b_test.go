@@ -162,16 +162,11 @@ func TestCurrencyBalance(t *testing.T) {
 		t.Errorf("CurrencyBalance() get request failed, expected Error=%v, instead got Error=%v\n", nil, err)
 		return
 	}
-	/*
-		if !res.Success {
-			t.Errorf("CurrencyBalance() get request failed, expected res.Success to be true, instead got %+v\n", res)
-			return
-		}
 
-		if len(res.Result) < 1 {
-			t.Errorf("CurrencyBalance() get request failed, expected res.Result length to have data, instead got %+v\n", res)
-			return
-		}
-	*/
+	if !res.Success {
+		t.Errorf("CurrencyBalance() get request failed, expected res.Success to be true, instead got %+v\n", res)
+		return
+	}
+
 	t.Logf("CurrencyBalance() get request success, expected %+v\n, got %v+\n", res, res)
 }
