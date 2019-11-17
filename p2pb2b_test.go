@@ -3,7 +3,6 @@ package p2pb2b
 import (
 	"context"
 	"flag"
-	"fmt"
 	"testing"
 )
 
@@ -153,7 +152,7 @@ func TestSymbols(t *testing.T) {
 var APISecret *string = flag.String("secret", "", "Pass in api secret to test protected requests")
 var APIKey *string = flag.String("key", "", "Pass in api key to test protected requests")
 
-func TestCurrencyBalance(t *testing.T) {
+/*func TestCurrencyBalance(t *testing.T) {
 	fmt.Printf("key: %+v\n secret: %+v", *APIKey, *APISecret)
 	ctx := context.Background()
 	client := NewClient("https://api.p2pb2b.io", *APIKey, *APISecret, ctx)
@@ -169,4 +168,45 @@ func TestCurrencyBalance(t *testing.T) {
 	}
 
 	t.Logf("CurrencyBalance() get request success, expected %+v\n, got %v+\n", res, res)
+}*/
+/*
+func TestBalances(t *testing.T) {
+	ctx := context.Background()
+	client := NewClient("https://api.p2pb2b.io", *APIKey, *APISecret, ctx)
+	res, err := client.Balances()
+	if err != nil {
+		t.Errorf("Balances() get request failed, expected Error=%v, instead got Error=%v\n", nil, err)
+		return
+	}
+
+	if !res.Success {
+		t.Errorf("Balances() get request failed, expected res.Success to be true, instead got %+v\n", res)
+		return
+	}
+
+	t.Logf("Balances() get request success, expected %+v\n, got %v+\n", res, res)
+
+}*/
+
+func TestCreateOrder(t *testing.T) {
+	ctx := context.Background()
+	client := NewClient("https://api.p2pb2b.io", *APIKey, *APISecret, ctx)
+	res, err := client.CreateOrder(CreateOrderParams{
+		Market: "ETH_BTC",
+		Side:   "sell",
+		Amount: "0.05",
+		Price:  "0.3",
+	})
+	if err != nil {
+		t.Errorf("Balances() get request failed, expected Error=%v, instead got Error=%v\n", nil, err)
+		return
+	}
+	/*
+		if !res.Success {
+			t.Errorf("Balances() get request failed, expected res.Success to be true, instead got %+v\n", res)
+			return
+		}
+	*/
+	t.Logf("Balances() get request success, expected %+v\n, got %v+\n", res, res)
+
 }
