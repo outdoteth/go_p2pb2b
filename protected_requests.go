@@ -100,7 +100,25 @@ type CreateOrderJsonBody struct {
 	Price      string `json:"price"`
 }
 
+type createOrderResult struct {
+	OrderId   int64   `json:"orderId"`
+	Market    string  `json:"market"`
+	Price     string  `json:"price"`
+	Side      string  `json:"side"`
+	Timestamp float64 `json:"timestamp"`
+	DealMoney string  `json:"dealMoney"`
+	DealStock string  `json:"dealStock"`
+	Amount    string  `json:"amount"`
+	TakerFee  string  `json:"takerFee"`
+	MakerFee  string  `json:"makerFee"`
+	Left      string  `json:"left"`
+	DealFee   string  `json:"dealFee"`
+}
+
 type CreateOrderJsonRes struct {
+	Success bool              `json:"success"`
+	Message string            `json:"message"`
+	Result  createOrderResult `json:"result"`
 }
 
 func (clt *Client) CreateOrder(opts CreateOrderParams) (*CreateOrderJsonRes, error) {

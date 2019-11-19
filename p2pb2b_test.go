@@ -194,7 +194,7 @@ func TestCreateOrder(t *testing.T) {
 	res, err := client.CreateOrder(CreateOrderParams{
 		Market: "ETH_BTC",
 		Side:   "sell",
-		Amount: "0.05",
+		Amount: "0.03",
 		Price:  "0.3",
 	})
 	if err != nil {
