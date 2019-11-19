@@ -188,6 +188,8 @@ func TestBalances(t *testing.T) {
 
 }*/
 
+var OrderIdTmp int64
+
 func TestCreateOrder(t *testing.T) {
 	ctx := context.Background()
 	client := NewClient("https://api.p2pb2b.io", *APIKey, *APISecret, ctx)
@@ -201,12 +203,34 @@ func TestCreateOrder(t *testing.T) {
 		t.Errorf("Balances() get request failed, expected Error=%v, instead got Error=%v\n", nil, err)
 		return
 	}
+
+	OrderIdTmp = res.Result.OrderId
+	if !res.Success {
+		t.Errorf("Balances() get request failed, expected res.Success to be true, instead got %+v\n", res)
+		return
+	}
+
+	t.Logf("Balances() get request success, expected %+v\n, got %v+\n", res, res)
+
+}
+
+func TestCancelOrder(t *testing.T) {
+	ctx := context.Background()
+	client := NewClient("https://api.p2pb2b.io", *APIKey, *APISecret, ctx)
+	res, err := client.CancelOrder(CancelOrderParams{
+		Market:  "ETH_BTC",
+		OrderId: OrderIdTmp,
+	})
+	if err != nil {
+		t.Errorf("CancelOrder() get request failed, expected Error=%v, instead got Error=%v\n", nil, err)
+		return
+	}
 	/*
 		if !res.Success {
 			t.Errorf("Balances() get request failed, expected res.Success to be true, instead got %+v\n", res)
 			return
 		}
 	*/
-	t.Logf("Balances() get request success, expected %+v\n, got %v+\n", res, res)
+	t.Logf("CancelOrder() get request success, expected %+v\n, got %v+\n", res, res)
 
 }

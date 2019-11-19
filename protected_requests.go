@@ -31,7 +31,7 @@ func (clt *Client) CurrencyBalance(opts CurrencyBalanceParams) (*CurrencyBalance
 	endpoint := "/api/v1/account/balance"
 	postBody := CurrencyBalanceJsonBody{
 		RequestUrl: endpoint,
-		Nonce:      time.Now().Unix(),
+		Nonce:      time.Now().UnixNano(),
 		Currency:   opts.Currency,
 	}
 
@@ -68,7 +68,7 @@ func (clt *Client) Balances() (*BalancesJsonRes, error) {
 	endpoint := "/api/v1/account/balances"
 	postBody := BalancesJsonBody{
 		RequestUrl: endpoint,
-		Nonce:      time.Now().Unix(),
+		Nonce:      time.Now().UnixNano(),
 	}
 
 	res, err := clt.AuthAPIRequest(postBody, http.MethodPost, endpoint)
@@ -125,7 +125,7 @@ func (clt *Client) CreateOrder(opts CreateOrderParams) (*CreateOrderJsonRes, err
 	endpoint := "/api/v1/order/new"
 	postBody := CreateOrderJsonBody{
 		RequestUrl: endpoint,
-		Nonce:      time.Now().Unix(),
+		Nonce:      time.Now().UnixNano(),
 		Market:     opts.Market,
 		Side:       opts.Side,
 		Amount:     opts.Amount,
@@ -143,4 +143,61 @@ func (clt *Client) CreateOrder(opts CreateOrderParams) (*CreateOrderJsonRes, err
 	}
 
 	return &jsonRes, nil
+}
+
+type cancelOrderResult struct {
+	OrderId   int64   `json:"orderId"`
+	Market    string  `json:"market"`
+	Price     string  `json:"price"`
+	Side      string  `json:"side"`
+	Type      string  `json:"type"`
+	Timestamp float64 `json:"timestamp"`
+	DealMoney string  `json:"dealMoney"`
+	DealStock string  `json:"dealStock"`
+	Amount    string  `json:"amount"`
+	TakerFee  string  `json:"takerFee"`
+	MakerFee  string  `json:"makerFee"`
+	Left      string  `json:"left"`
+	DealFee   string  `json:"dealFee"`
+}
+
+type CancelOrderJsonRes struct {
+	Success bool
+	Message string
+	Result  cancelOrderResult
+}
+
+type CancelOrderParams struct {
+	Market  string
+	OrderId int64
+}
+
+type CancelOrderJsonBody struct {
+	RequestUrl string `json:"request"`
+	Nonce      int64  `json:"nonce"`
+	Market     string `json:"market"`
+	OrderId    int64  `json:"orderId"`
+}
+
+func (clt *Client) CancelOrder(opts CancelOrderParams) (*CancelOrderJsonRes, error) {
+	endpoint := "/api/v1/order/cancel"
+	postBody := CancelOrderJsonBody{
+		RequestUrl: endpoint,
+		Nonce:      time.Now().UnixNano(),
+		Market:     opts.Market,
+		OrderId:    opts.OrderId,
+	}
+
+	res, err := clt.AuthAPIRequest(postBody, http.MethodPost, endpoint)
+	if err != nil {
+		return nil, err
+	}
+
+	var jsonRes CancelOrderJsonRes
+	if err := json.Unmarshal(res, &jsonRes); err != nil {
+		return nil, err
+	}
+
+	return &jsonRes, nil
+
 }
