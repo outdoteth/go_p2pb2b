@@ -261,3 +261,60 @@ func (clt *Client) GetOrders(opts GetOrdersParams) (*GetOrdersJsonRes, error) {
 	return &jsonRes, nil
 
 }
+
+type orderHistoryResult struct {
+	Id         int64   `json:"id"`
+	Amount     string  `json:"amount"`
+	Price      string  `json:"price"`
+	Type       string  `json:"type"`
+	Side       string  `json:"side"`
+	CTime      float64 `json:"ctime"`
+	TakerFee   string  `json:"takerFee"`
+	FTime      float64 `json:"ftime"`
+	Market     string  `json:"market"`
+	MakerFee   string  `json:"makerFee"`
+	DealFee    string  `json:"dealFee"`
+	DealStock  string  `json:"dealStock"`
+	DealMoney  string  `json:"dealMoney"`
+	MarketName string  `json:"marketName"`
+}
+
+type OrderHistoryJsonRes struct {
+	Success bool
+	Message string
+	Result  map[string][]orderHistoryResult
+}
+
+type OrderHistoryBody struct {
+	RequestUrl string `json:"request"`
+	Nonce      int64  `json:"nonce"`
+	Offset     int64  `json:"offset"`
+	Limit      int64  `json:"limit"`
+}
+
+type OrderHistoryParams struct {
+	Offset int64
+	Limit  int64
+}
+
+func (clt *Client) OrderHistory(opts OrderHistoryParams) (*OrderHistoryJsonRes, error) {
+	endpoint := "/api/v1/account/order_history"
+	postBody := OrderHistoryBody{
+		RequestUrl: endpoint,
+		Nonce:      time.Now().UnixNano(),
+		Offset:     opts.Offset,
+		Limit:      opts.Limit,
+	}
+
+	res, err := clt.AuthAPIRequest(postBody, http.MethodPost, endpoint)
+	if err != nil {
+		return nil, err
+	}
+
+	var jsonRes OrderHistoryJsonRes
+	if err := json.Unmarshal(res, &jsonRes); err != nil {
+		return nil, err
+	}
+
+	return &jsonRes, nil
+}

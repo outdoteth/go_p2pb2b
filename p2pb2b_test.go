@@ -256,3 +256,24 @@ func TestGetOrders(t *testing.T) {
 	t.Logf("GetOrders() get request success, expected %+v\n, got %v+\n", res, res)
 
 }
+
+func TestOrderHistory(t *testing.T) {
+	ctx := context.Background()
+	client := NewClient("https://api.p2pb2b.io", *APIKey, *APISecret, ctx)
+	res, err := client.OrderHistory(OrderHistoryParams{
+		Offset: 0,
+		Limit:  100,
+	})
+	if err != nil {
+		t.Errorf("OrderHistory() get request failed, expected Error=%v, instead got Error=%v\n", nil, err)
+		return
+	}
+	/*
+		if !res.Success {
+			t.Errorf("OrderHistory() get request failed, expected res.Success to be true, instead got %+v\n", res)
+			return
+		}
+	*/
+	t.Logf("OrderHistory() get request success, expected %+v\n, got %v+\n", res, res)
+
+}
