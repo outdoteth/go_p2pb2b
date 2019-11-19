@@ -201,3 +201,63 @@ func (clt *Client) CancelOrder(opts CancelOrderParams) (*CancelOrderJsonRes, err
 	return &jsonRes, nil
 
 }
+
+type getOrdersResult struct {
+	OrderId   int64   `json:"orderId"`
+	Left      string  `json:"left"`
+	Market    string  `json:"market"`
+	Amount    string  `json:"amount"`
+	Type      string  `json:"type"`
+	Price     string  `json:"price"`
+	Timestamp float64 `json:"timestamp"`
+	Side      string  `json:"side"`
+	DealFee   string  `json:"dealFee"`
+	TakerFee  string  `json:"takerFee"`
+	MakerFee  string  `json:"makerFee"`
+	DealStock string  `json:"dealStock"`
+	DealMoney string  `json:"dealMoney"`
+}
+
+type GetOrdersJsonRes struct {
+	Success bool              `json:"success"`
+	Message string            `json:"message"`
+	Result  []getOrdersResult `json:"result"`
+}
+
+type GetOrdersBody struct {
+	RequestUrl string `json:"request"`
+	Nonce      int64  `json:"nonce"`
+	Market     string `json:"market"`
+	Offset     int64  `json:"offset"`
+	Limit      int64  `json:"limit"`
+}
+
+type GetOrdersParams struct {
+	Market string
+	Offset int64
+	Limit  int64
+}
+
+func (clt *Client) GetOrders(opts GetOrdersParams) (*GetOrdersJsonRes, error) {
+	endpoint := "/api/v1/orders"
+	postBody := GetOrdersBody{
+		RequestUrl: endpoint,
+		Nonce:      time.Now().UnixNano(),
+		Market:     opts.Market,
+		Offset:     opts.Offset,
+		Limit:      opts.Limit,
+	}
+
+	res, err := clt.AuthAPIRequest(postBody, http.MethodPost, endpoint)
+	if err != nil {
+		return nil, err
+	}
+
+	var jsonRes GetOrdersJsonRes
+	if err := json.Unmarshal(res, &jsonRes); err != nil {
+		return nil, err
+	}
+
+	return &jsonRes, nil
+
+}

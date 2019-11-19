@@ -234,3 +234,25 @@ func TestCancelOrder(t *testing.T) {
 	t.Logf("CancelOrder() get request success, expected %+v\n, got %v+\n", res, res)
 
 }
+
+func TestGetOrders(t *testing.T) {
+	ctx := context.Background()
+	client := NewClient("https://api.p2pb2b.io", *APIKey, *APISecret, ctx)
+	res, err := client.GetOrders(GetOrdersParams{
+		Market: "ETH_BTC",
+		Offset: 0,
+		Limit:  100,
+	})
+	if err != nil {
+		t.Errorf("GetOrders() get request failed, expected Error=%v, instead got Error=%v\n", nil, err)
+		return
+	}
+	/*
+		if !res.Success {
+			t.Errorf("GetOrders() get request failed, expected res.Success to be true, instead got %+v\n", res)
+			return
+		}
+	*/
+	t.Logf("GetOrders() get request success, expected %+v\n, got %v+\n", res, res)
+
+}
