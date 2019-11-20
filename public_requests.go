@@ -238,8 +238,8 @@ func (clt *Client) Depth(opts Depth_params) (*DepthJson, error) {
 
 type productsResult struct {
 	Id          string `json:"id"`
-	From_symbol string `json:"from___symbol"`
-	To_symbol   string `json:"to___symbol"`
+	From_symbol string `json:"from_symbol"`
+	To_symbol   string `json:"to_symbol"`
 }
 
 type ProductsJson struct {
@@ -271,8 +271,8 @@ type SymbolsJson struct {
 	Success     bool     `json:"success"`
 	Message     string   `json:"message"`
 	Result      []string `json:"result"`
-	CacheTime   float64  `json:"cache___time"`
-	CurrentTime float64  `json:"current___time"`
+	CacheTime   float64  `json:"cache_time"`
+	CurrentTime float64  `json:"current_time"`
 }
 
 func (clt *Client) Symbols() (*SymbolsJson, error) {

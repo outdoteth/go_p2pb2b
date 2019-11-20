@@ -318,3 +318,45 @@ func (clt *Client) OrderHistory(opts OrderHistoryParams) (*OrderHistoryJsonRes, 
 
 	return &jsonRes, nil
 }
+
+type GetOrderJsonRes struct {
+	Success bool   `json:"success"`
+	Message string `json:"message"`
+}
+
+type GetOrderBody struct {
+	RequestUrl string `json:"request"`
+	Nonce      int64  `json:"nonce"`
+	Offset     int64  `json:"offset"`
+	OrderID    int64  `json:"orderId"`
+	Limit      int64  `json:"limit"`
+}
+
+type GetOrderParams struct {
+	OrderID int64
+	Offset  int64
+	Limit   int64
+}
+
+func (clt *Client) GetOrder(opts GetOrderParams) (*GetOrderJsonRes, error) {
+	endpoint := "/api/v1/account/order"
+	postBody := GetOrderBody{
+		RequestUrl: endpoint,
+		Nonce:      time.Now().UnixNano(),
+		OrderID:    opts.OrderID,
+		Offset:     opts.Offset,
+		Limit:      opts.Limit,
+	}
+
+	res, err := clt.AuthAPIRequest(postBody, http.MethodPost, endpoint)
+	if err != nil {
+		return nil, err
+	}
+
+	var jsonRes GetOrderJsonRes
+	if err := json.Unmarshal(res, &jsonRes); err != nil {
+		return nil, err
+	}
+
+	return &jsonRes, nil
+}
