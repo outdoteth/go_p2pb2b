@@ -257,12 +257,14 @@ func TestGetOrders(t *testing.T) {
 
 }
 
-func TestOrderHistory(t *testing.T) {
+/// TODO: Still testing this
+func TestGetOrder(t *testing.T) {
 	ctx := context.Background()
 	client := NewClient("https://api.p2pb2b.io", *APIKey, *APISecret, ctx)
-	res, err := client.OrderHistory(OrderHistoryParams{
-		Offset: 0,
-		Limit:  100,
+	res, err := client.GetOrder(GetOrderParams{
+		Offset:  0,
+		OrderID: OrderIdTmp,
+		Limit:   100,
 	})
 	if err != nil {
 		t.Errorf("OrderHistory() get request failed, expected Error=%v, instead got Error=%v\n", nil, err)
@@ -278,13 +280,12 @@ func TestOrderHistory(t *testing.T) {
 
 }
 
-func TestGetOrder(t *testing.T) {
+func TestOrderHistory(t *testing.T) {
 	ctx := context.Background()
 	client := NewClient("https://api.p2pb2b.io", *APIKey, *APISecret, ctx)
-	res, err := client.GetOrder(GetOrderParams{
-		Offset:  0,
-		OrderID: OrderIdTmp,
-		Limit:   100,
+	res, err := client.OrderHistory(OrderHistoryParams{
+		Offset: 0,
+		Limit:  100,
 	})
 	if err != nil {
 		t.Errorf("OrderHistory() get request failed, expected Error=%v, instead got Error=%v\n", nil, err)

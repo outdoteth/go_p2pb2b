@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"net/http"
 	"time"
+
+	"github.com/Jeffail/gabs"
 )
 
 type currencyBalanceResult struct {
@@ -320,8 +322,8 @@ func (clt *Client) OrderHistory(opts OrderHistoryParams) (*OrderHistoryJsonRes, 
 }
 
 type GetOrderJsonRes struct {
-	Success bool   `json:"success"`
-	Message string `json:"message"`
+	Success bool        `json:"success"`
+	Message interface{} `json:"message"`
 }
 
 type GetOrderBody struct {
@@ -338,7 +340,9 @@ type GetOrderParams struct {
 	Limit   int64
 }
 
-func (clt *Client) GetOrder(opts GetOrderParams) (*GetOrderJsonRes, error) {
+/// TODO: Where I left off
+/// Need to do testing on this
+func (clt *Client) GetOrder(opts GetOrderParams) (*gabs.Container, error) {
 	endpoint := "/api/v1/account/order"
 	postBody := GetOrderBody{
 		RequestUrl: endpoint,
@@ -353,10 +357,13 @@ func (clt *Client) GetOrder(opts GetOrderParams) (*GetOrderJsonRes, error) {
 		return nil, err
 	}
 
-	var jsonRes GetOrderJsonRes
-	if err := json.Unmarshal(res, &jsonRes); err != nil {
-		return nil, err
-	}
+	jsonRes, err := gabs.ParseJSON(res)
+	return jsonRes, nil
+	/*
+		var jsonRes GetOrderJsonRes
+		if err := json.Unmarshal(res, &jsonRes); err != nil {
+			return nil, err
+		}
 
-	return &jsonRes, nil
+		return &jsonRes, nil*/
 }
