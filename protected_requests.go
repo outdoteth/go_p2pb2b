@@ -4,8 +4,6 @@ import (
 	"encoding/json"
 	"net/http"
 	"time"
-
-	"github.com/Jeffail/gabs"
 )
 
 type currencyBalanceResult struct {
@@ -15,7 +13,7 @@ type currencyBalanceResult struct {
 
 type CurrencyBalanceJsonRes struct {
 	Success bool                  `json:"success"`
-	Message string                `json:"message"`
+	Message json.RawMessage       `json:"message"`
 	Result  currencyBalanceResult `json:"result"`
 }
 
@@ -62,7 +60,7 @@ type balancesResult struct {
 
 type BalancesJsonRes struct {
 	Success bool                      `json:"success"`
-	Message string                    `json:"message"`
+	Message json.RawMessage           `json:"message"`
 	Result  map[string]balancesResult `json:"result"`
 }
 
@@ -119,7 +117,7 @@ type createOrderResult struct {
 
 type CreateOrderJsonRes struct {
 	Success bool              `json:"success"`
-	Message string            `json:"message"`
+	Message json.RawMessage   `json:"message"`
 	Result  createOrderResult `json:"result"`
 }
 
@@ -164,9 +162,9 @@ type cancelOrderResult struct {
 }
 
 type CancelOrderJsonRes struct {
-	Success bool
-	Message string
-	Result  cancelOrderResult
+	Success bool              `json:"success"`
+	Message json.RawMessage   `json:"message"`
+	Result  cancelOrderResult `json:"result,omitempty"`
 }
 
 type CancelOrderParams struct {
@@ -222,7 +220,7 @@ type getOrdersResult struct {
 
 type GetOrdersJsonRes struct {
 	Success bool              `json:"success"`
-	Message string            `json:"message"`
+	Message json.RawMessage   `json:"message"`
 	Result  []getOrdersResult `json:"result"`
 }
 
@@ -283,7 +281,7 @@ type orderHistoryResult struct {
 
 type OrderHistoryJsonRes struct {
 	Success bool
-	Message string
+	Message json.RawMessage
 	Result  map[string][]orderHistoryResult
 }
 
@@ -322,8 +320,8 @@ func (clt *Client) OrderHistory(opts OrderHistoryParams) (*OrderHistoryJsonRes, 
 }
 
 type GetOrderJsonRes struct {
-	Success bool        `json:"success"`
-	Message interface{} `json:"message"`
+	Success bool            `json:"success"`
+	Message json.RawMessage `json:"message"`
 }
 
 type GetOrderBody struct {
@@ -342,7 +340,7 @@ type GetOrderParams struct {
 
 /// TODO: Where I left off
 /// Need to do testing on this
-func (clt *Client) GetOrder(opts GetOrderParams) (*gabs.Container, error) {
+func (clt *Client) GetOrder(opts GetOrderParams) (*GetOrderJsonRes, error) {
 	endpoint := "/api/v1/account/order"
 	postBody := GetOrderBody{
 		RequestUrl: endpoint,
@@ -357,13 +355,10 @@ func (clt *Client) GetOrder(opts GetOrderParams) (*gabs.Container, error) {
 		return nil, err
 	}
 
-	jsonRes, err := gabs.ParseJSON(res)
-	return jsonRes, nil
-	/*
-		var jsonRes GetOrderJsonRes
-		if err := json.Unmarshal(res, &jsonRes); err != nil {
-			return nil, err
-		}
+	var jsonRes GetOrderJsonRes
+	if err := json.Unmarshal(res, &jsonRes); err != nil {
+		return nil, err
+	}
 
-		return &jsonRes, nil*/
+	return &jsonRes, nil
 }

@@ -276,7 +276,7 @@ func TestGetOrder(t *testing.T) {
 			return
 		}
 	*/
-	t.Logf("OrderHistory() get request success, expected %+v\n, got %v+\n", res, res)
+	t.Logf("OrderHistory() get request success, expected %+v\n, got %v+\n", res, string(res.Message))
 
 }
 
