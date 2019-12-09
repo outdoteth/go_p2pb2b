@@ -338,8 +338,6 @@ type GetOrderParams struct {
 	Limit   int64
 }
 
-/// TODO: Where I left off
-/// Need to do testing on this
 func (clt *Client) GetOrder(opts GetOrderParams) (*GetOrderJsonRes, error) {
 	endpoint := "/api/v1/account/order"
 	postBody := GetOrderBody{

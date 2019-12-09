@@ -2,7 +2,7 @@ package p2pb2b
 
 import (
 	"encoding/json"
-	"fmt"
+	"fmMt"
 	"net/http"
 )
 
@@ -16,21 +16,21 @@ type marketsResult struct {
 	MinAmount string `json: "minAmount"`
 }
 
-type MarketsJson struct {
+type MarketsJsonRes struct {
 	Success bool            `json: "success"`
 	Message string          `json: "message"`
 	Result  []marketsResult `json: "result"`
 }
 
-func (clt *Client) Markets() (*MarketsJson, error) {
-	endpoint := "/public/markets"
+func (clt *Client) Markets() (*MarketsJsonRes, error) {
+	endpoint := "api/v1/public/markets"
 	res, err := clt.APIRequest(http.MethodGet, endpoint)
 
 	if err != nil {
 		return nil, err
 	}
 
-	var jsonRes MarketsJson
+	var jsonRes MarketsJsonRes
 	if err := json.Unmarshal(res, &jsonRes); err != nil {
 		return nil, err
 	}
@@ -50,7 +50,7 @@ type tickersResult struct {
 	} `json: "ticker"`
 }
 
-type TickersJson struct {
+type TickersJsonRes struct {
 	Success     bool                     `json: "success"`
 	Message     string                   `json: "message"`
 	Result      map[string]tickersResult `json: "result"`
@@ -58,14 +58,14 @@ type TickersJson struct {
 	CurrentTime float64                  `json: "current_time"`
 }
 
-func (clt *Client) Tickers() (*TickersJson, error) {
-	endpoint := "/public/tickers"
+func (clt *Client) Tickers() (*TickersJsonRes, error) {
+	endpoint := "api/v1/public/tickers"
 	res, err := clt.APIRequest(http.MethodGet, endpoint)
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println(string(res))
-	var jsonRes TickersJson
+
+	var jsonRes TickersJsonRes
 	if err := json.Unmarshal(res, &jsonRes); err != nil {
 		return nil, err
 	}
@@ -85,7 +85,7 @@ type tickerResult struct {
 	Change string `json: "change"`
 }
 
-type TickerJson struct {
+type TickerJsonRes struct {
 	Success     bool         `json: "success"`
 	Message     string       `json: "message"`
 	Result      tickerResult `json: "result"`
@@ -97,14 +97,14 @@ type TickerParams struct {
 	Symbol string
 }
 
-func (clt *Client) Ticker(opts TickerParams) (*TickerJson, error) {
-	endpoint := "/public/ticker?market=" + opts.Symbol
+func (clt *Client) Ticker(opts TickerParams) (*TickerJsonRes, error) {
+	endpoint := "api/v1/public/ticker?market=" + opts.Symbol
 	res, err := clt.APIRequest(http.MethodGet, endpoint)
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println("\n" + string(res))
-	var jsonRes TickerJson
+
+	var jsonRes TickerJsonRes
 	if err := json.Unmarshal(res, &jsonRes); err != nil {
 		return nil, err
 	}
@@ -133,7 +133,7 @@ type orderBookResult struct {
 	} `json: "orders"`
 }
 
-type OrderBookJson struct {
+type OrderBookJsonRes struct {
 	Success     bool            `json: "success"`
 	Message     string          `json: "message"`
 	Result      orderBookResult `json: "result"`
@@ -148,15 +148,14 @@ type OrderBookParams struct {
 	Limit  string
 }
 
-func (clt *Client) OrderBook(opts OrderBookParams) (*OrderBookJson, error) {
-	endpoint := "/public/book?market=" + opts.Market + "&side=" + opts.Side + "&offset=" + opts.Offset + "&limit=" + opts.Limit
+func (clt *Client) OrderBook(opts OrderBookParams) (*OrderBookJsonRes, error) {
+	endpoint := "api/v1/public/book?market=" + opts.Market + "&side=" + opts.Side + "&offset=" + opts.Offset + "&limit=" + opts.Limit
 	res, err := clt.APIRequest(http.MethodGet, endpoint)
 	if err != nil {
 		return nil, err
 	}
 
-	fmt.Println("\n" + string(res))
-	var jsonRes OrderBookJson
+	var jsonRes OrderBookJsonRes
 	if err := json.Unmarshal(res, &jsonRes); err != nil {
 		return nil, err
 	}
@@ -172,7 +171,7 @@ type historyResult struct {
 	Price  string  `json: "price"`
 }
 
-type HistoryJson struct {
+type HistoryJsonRes struct {
 	Success     bool            `json: "success"`
 	Message     string          `json: "message"`
 	Result      []historyResult `json: "result"`
@@ -182,19 +181,18 @@ type HistoryJson struct {
 
 type HistoryParams struct {
 	Market  string
-	Last_id string
+	LastId string
 	Limit   string
 }
 
-func (clt *Client) History(opts HistoryParams) (*HistoryJson, error) {
-	endpoint := "/public/history?market=" + opts.Market + "&lastId=" + opts.Last_id + "&limit=" + opts.Limit
+func (clt *Client) History(opts HistoryParams) (*HistoryJsonRes, error) {
+	endpoint := "api/v1/public/history?market=" + opts.Market + "&lastId=" + opts.LastId + "&limit=" + opts.Limit
 	res, err := clt.APIRequest(http.MethodGet, endpoint)
 	if err != nil {
 		return nil, err
 	}
 
-	fmt.Println("\n" + string(res))
-	var jsonRes HistoryJson
+	var jsonRes HistoryJsonRes
 	if err := json.Unmarshal(res, &jsonRes); err != nil {
 		return nil, err
 	}
@@ -207,7 +205,7 @@ type depthResult struct {
 	Bids [][2]string `json:"bids"`
 }
 
-type DepthJson struct {
+type DepthJsonRes struct {
 	Success     bool        `json:"success"`
 	Message     string      `json:"message"`
 	Result      depthResult `json:"result"`
@@ -220,15 +218,14 @@ type Depth_params struct {
 	Limit  string
 }
 
-func (clt *Client) Depth(opts Depth_params) (*DepthJson, error) {
-	endpoint := "/public/depth/result?market=" + opts.Market + "&limit=" + opts.Limit
+func (clt *Client) Depth(opts Depth_params) (*DepthJsonRes, error) {
+	endpoint := "api/v1/public/depth/result?market=" + opts.Market + "&limit=" + opts.Limit
 	res, err := clt.APIRequest(http.MethodGet, endpoint)
 	if err != nil {
 		return nil, err
 	}
 
-	fmt.Println("\n" + string(res))
-	var jsonRes DepthJson
+	var jsonRes DepthJsonRes
 	if err := json.Unmarshal(res, &jsonRes); err != nil {
 		return nil, err
 	}
@@ -238,11 +235,11 @@ func (clt *Client) Depth(opts Depth_params) (*DepthJson, error) {
 
 type productsResult struct {
 	Id          string `json:"id"`
-	From_symbol string `json:"from_symbol"`
-	To_symbol   string `json:"to_symbol"`
+	FromSymbol string `json:"from_symbol"`
+	ToSymbol   string `json:"to_symbol"`
 }
 
-type ProductsJson struct {
+type ProductsJsonRes struct {
 	Success     bool             `json:"success"`
 	Message     string           `json:"message"`
 	Result      []productsResult `json:"result"`
@@ -250,15 +247,14 @@ type ProductsJson struct {
 	CurrentTime float64          `json:"current_time"`
 }
 
-func (clt *Client) Products() (*ProductsJson, error) {
-	endpoint := "/public/products"
+func (clt *Client) Products() (*ProductsJsonRes, error) {
+	endpoint := "api/v1/public/products"
 	res, err := clt.APIRequest(http.MethodGet, endpoint)
 	if err != nil {
 		return nil, err
 	}
 
-	fmt.Println("\n" + string(res))
-	var jsonRes ProductsJson
+	var jsonRes ProductsJsonRes
 	if err := json.Unmarshal(res, &jsonRes); err != nil {
 		return nil, err
 	}
@@ -267,7 +263,7 @@ func (clt *Client) Products() (*ProductsJson, error) {
 
 }
 
-type SymbolsJson struct {
+type SymbolsJsonRes struct {
 	Success     bool     `json:"success"`
 	Message     string   `json:"message"`
 	Result      []string `json:"result"`
@@ -275,15 +271,14 @@ type SymbolsJson struct {
 	CurrentTime float64  `json:"current_time"`
 }
 
-func (clt *Client) Symbols() (*SymbolsJson, error) {
-	endpoint := "/public/symbols"
+func (clt *Client) Symbols() (*SymbolsJsonRes, error) {
+	endpoint := "api/v1/public/symbols"
 	res, err := clt.APIRequest(http.MethodGet, endpoint)
 	if err != nil {
 		return nil, err
 	}
 
-	fmt.Println("\n" + string(res))
-	var jsonRes SymbolsJson
+	var jsonRes SymbolsJsonRes
 	if err := json.Unmarshal(res, &jsonRes); err != nil {
 		return nil, err
 	}
