@@ -12,19 +12,21 @@ import (
             "fmt"
             "github.com/Dylan-Phoon/GoP2PB2B/p2pb2b"
         )
-        
-// These can be blank if you are not making protected requests
-apiSecret := ""
-apiKey := ""
 
-ctx := context.Background()
-client := p2pb2b.NewClient("https://api.p2pb2b.io", apiSecret, apiKey, ctx)
+func main() {
+    // These can be blank if you are not making protected requests
+    apiSecret := ""
+    apiKey := ""
 
-var res *MarketsJsonRes, err = client.Markets()
-if err != nil {
-    fmt.Printf("Markets() error: %v", err)
+    ctx := context.Background()
+    client := p2pb2b.NewClient("https://api.p2pb2b.io", apiSecret, apiKey, ctx)
+
+    res, err := client.Markets()
+    if err != nil {
+        fmt.Printf("Markets() error: %v", err)
+    }
+    fmt.Printf("Markets() response: %+v", res)
 }
-fmt.Printf("Markets() response: %+v", res)
 ```
 **Each method follows the standard convention;**
 
@@ -34,14 +36,14 @@ func SomeRequest(SomeRequestParams) (*SomeRequestJsonRes, err)
 
 ## Contents
 **Public Requests**
-[Markets](#markets)
-[Ticker](#ticker)
-[Tickers](#tickers)
-[OrderBook](#orderbook)
-[History](#history)
-[Depth](#depth)
-[Product](#product)
-[Symbols](#symbols)
+* [Markets](#markets)
+* [Ticker](#ticker)
+* [Tickers](#tickers)
+* [OrderBook](#orderbook)
+* [History](#history)
+* [Depth](#depth)
+* [Product](#product)
+* [Symbols](#symbols)
 
 
 ### Markets 
